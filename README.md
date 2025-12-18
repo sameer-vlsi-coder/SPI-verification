@@ -1,156 +1,157 @@
-# SPI Memory Verification using Verilog, SystemVerilog, and UVM
+# 🚀 SPI Memory Verification using Verilog, SystemVerilog, and UVM
 
-## Project Overview
-This project verifies an **SPI-based memory module** using **Verilog** for RTL and a **SystemVerilog UVM-based verification environment**. The verification covers SPI read/write operations, reset behavior, address validation, and protocol correctness.
+## 📌 Project Overview
+This project verifies an **SPI-based memory module** using **Verilog** for RTL and a **SystemVerilog UVM-based verification environment**.  
+The verification covers **SPI read/write operations**, **reset behavior**, **address validation**, and **protocol correctness**.
 
-Verification completeness is ensured using **SystemVerilog assertions**, **functional coverage**, and **code coverage**. Simulations and coverage analysis are performed using **QuestaSim**, with **TCL scripting** used to automate the verification flow.
+Verification completeness is ensured using:
+- ✅ SystemVerilog Assertions  
+- 📊 Functional Coverage  
+- 📈 Code Coverage  
+
+All simulations and coverage analysis are performed using **QuestaSim**, with **TCL scripting** used to automate the verification flow.
 
 ---
 
-## Design Under Test (DUT)
-The Design Under Test is an **SPI memory module** that supports basic **read and write operations** controlled through a write-enable signal. The module interfaces with a memory array and provides status signaling to indicate operation completion and error conditions.
+## 🧠 Design Under Test (DUT)
+The Design Under Test is an **SPI memory module** that supports **read and write operations** controlled by a write-enable signal.  
+The DUT interfaces with a memory array and provides status signaling for operation completion and error detection.
 
-### Interface Signals
+### 🔌 Interface Signals
 - **reset**  
-  Active-high reset signal. When asserted, all internal states and outputs are cleared.
+  🔹 Active-high reset. Clears all internal states and outputs.
 
 - **WR**  
-  Operation control signal:  
-  - `WR = 1` → Write operation  
-  - `WR = 0` → Read operation  
+  🔹 Operation select signal  
+  - `WR = 1` → ✍️ Write  
+  - `WR = 0` → 📖 Read  
 
 - **addr**  
-  Address input used to select the memory location for read or write operations.
+  🔹 Address input for memory access
 
 - **din**  
-  Data input used during write operations.
+  🔹 Data input during write operations
 
 - **dout**  
-  Data output used during read operations.
+  🔹 Data output during read operations
 
 - **done**  
-  Status signal indicating completion of a read or write operation.
+  🔹 Indicates completion of read/write operation
 
 - **error**  
-  Error flag indicating an invalid operation due to an out-of-range address.
+  🔹 Indicates invalid access (out-of-range address)
 
 ---
 
-## SPI Functional / Operation Specification
+## ⚙️ SPI Functional / Operation Specification
 
-### Functional Description
-- The `WR` signal controls the operation mode:
-  - `WR = 1` → Write operation
-  - `WR = 0` → Read operation
-- All operations are enabled only when `reset = 0`
-- When `reset = 1`, all outputs and internal states are cleared to zero
+### 🧩 Functional Description
+- `WR` selects operation mode (Read / Write)
+- All operations are valid only when `reset = 0`
+- When `reset = 1`, all outputs and states are cleared
 
-### Write Operation
-- Reset is deasserted (`reset = 0`)
-- `WR` is set to `1`
-- Address (`addr`) and input data (`din`) are applied
-- Write operation is performed
-- `done` is asserted high only after write completion
+### ✍️ Write Operation
+- Deassert reset (`reset = 0`)
+- Set `WR = 1`
+- Apply `addr` and `din`
+- Perform write
+- `done` asserted after completion
 
-### Read Operation
-- `WR` is set to `0`
-- Address (`addr`) is applied
-- Data is read from memory and observed on `dout`
-- `done` is asserted high only after read completion
+### 📖 Read Operation
+- Set `WR = 0`
+- Apply `addr`
+- Read data appears on `dout`
+- `done` asserted after completion
 
-### Address Checking and Error Handling
-- If `addr >= 31`, the `error` signal is asserted and `dout` is driven to zero
-- If `addr < 31`, the `error` signal remains low and valid data is observed
-- Address checking applies to both read and write operations
+### 🚨 Address Checking & Error Handling
+- `addr >= 31` → `error = 1`, `dout = 0`
+- `addr < 31` → valid operation
+- Applies to both read and write
 
-### Status Signaling
-- `done` indicates completion of a read or write transaction
-- `done` remains low during an active operation
-- Outside completed transactions, `done` remains low
+### ⏱️ Status Signaling
+- `done` remains low during operation
+- Asserted only after successful completion
 
 ---
 
-## Assertions
-SystemVerilog assertions are used to continuously monitor correctness during simulation.
+## 🛡️ Assertions
+SystemVerilog assertions continuously monitor protocol and control correctness.
 
-### Assertion Checks Implemented
-- **Reset Assertion**
-  - Ensures no read or write occurs when `reset = 1`
-  - Verifies `done` and `error` remain low during reset
+### ✔️ Implemented Assertions
+- 🔁 **Reset Assertion**
+  - No operation during reset
+  - `done = 0`, `error = 0`
 
-- **Operation Completion Assertion**
-  - Ensures `done` is asserted only after valid read/write completion
-  - Verifies `done` remains low during an active transaction
+- ✅ **Completion Assertion**
+  - `done` asserted only after valid completion
 
-- **Address Range Assertion**
-  - Asserts `error = 1` when `addr >= 31`
-  - Ensures `error = 0` for valid addresses (`addr < 31`)
+- 🚫 **Address Range Assertion**
+  - `error = 1` for `addr >= 31`
+  - `error = 0` for valid addresses
 
-- **Valid Operation Assertion**
-  - Ensures operations are enabled only when `reset = 0`
+- 🔐 **Valid Operation Assertion**
+  - Operations allowed only when reset is deasserted
 
 ---
 
-## Functional Coverage
-Functional coverage is implemented to ensure all planned scenarios are exercised.
+## 📊 Functional Coverage
+Functional coverage ensures all planned scenarios are exercised.
 
-- Coverpoints created for all interface signals
-- Coverpoints for valid and invalid address ranges
+- Coverpoints for all interface signals
+- Coverpoints for valid & invalid address ranges
 - Cross coverage for combined signal behavior
 
-**Total Covergroup Coverage:** 100%  
-**Covergroup Types:** 1
+🎯 **Total Covergroup Coverage:** `100%`  
+📦 **Covergroup Types:** `1`
 
 ---
 
-## Code Coverage
+## 📈 Code Coverage
 
-### Summary
-Code coverage is collected using **QuestaSim** with **statement, branch, condition, FSM, and toggle coverage** enabled.
+### 📑 Summary
+RTL code coverage is collected using **QuestaSim** with the following metrics enabled:
+- Statement Coverage ≈ **96.47%**
+- Branch Coverage ≈ **95%**
+- Condition Coverage = **100%**
+- FSM State Coverage = **100%**
+- FSM Transition Coverage ≈ **75%**
+- Toggle Coverage ≈ **70%**
 
-- Statement coverage ≈ 96.47%
-- Branch coverage ≈ 95%
-- Condition coverage = 100%
-- FSM state coverage = 100%
-- FSM transition coverage ≈ 75%
-- Toggle coverage ≈ 70%
-- Total RTL coverage (filtered view) ≈ 89.89%
+🧮 **Total RTL Coverage:** ≈ **89.89%**
 
-**Note:**  
-Partial code coverage is observed because default branches and idle-state transitions are not triggered under normal and valid SPI transaction scenarios.
+> ℹ️ Partial coverage exists due to default branches and idle-state transitions not triggered during valid SPI operation.
 
 ---
 
-## Tool & Automation
+## 🔧 Tool & Automation
 
-### Simulation Tool
+### 🧪 Simulation Tool
 - **Simulator:** QuestaSim  
 - **Languages:** Verilog, SystemVerilog  
-- **Verification Features Used:**
-  - Assertions
-  - Functional Coverage
-  - Code Coverage (Branch, Condition, FSM, Toggle)
+- **Verification Features:** Assertions, Functional Coverage, Code Coverage  
 
-### Automation
-- **TCL scripting** is used for:
-  - Compilation of RTL and testbench
-  - Design optimization with coverage enabled
-  - Simulation execution
-  - Coverage collection and reporting
+### 🤖 Automation
+- **TCL scripting** automates:
+  - Compilation
+  - Optimization with coverage
+  - Simulation
+  - Coverage reporting
 
-Automation ensures repeatable simulations and consistent coverage results.
+Ensures **repeatability** and **consistency**.
 
 ---
 
-## Limitations
-- Certain default branches and idle-state transitions are not exercised.
-- FSM transition coverage is partial due to unreachable transitions in normal operation.
-- Toggle coverage is limited for wide counters and rarely changing signals.
-- Performance and stress testing are outside the current scope.
+## ⚠️ Limitations
+- Default and idle-state paths are not exercised
+- Some FSM transitions are unreachable in normal operation
+- Toggle coverage limited for wide counters
+- No stress or performance testing
 
 ---
 
-## Conclusion
-This project verifies an **SPI memory design written in Verilog** using a **SystemVerilog UVM-based verification environment**. Functional correctness is validated through **directed stimulus, assertions, functional coverage, and code coverage** in **QuestaSim**.
+## 🏁 Conclusion
+This project demonstrates **end-to-end verification** of an SPI memory design written in **Verilog**, using a **SystemVerilog UVM-based environment**.  
+The use of **assertions, functional coverage, code coverage**, and **TCL automation** reflects an **industry-aligned verification methodology** suitable for entry-level and internship verification roles.
 
-**TCL-based automation** demonstrates a structured, repeatable, and industry-aligned verification workflow.
+---
+
