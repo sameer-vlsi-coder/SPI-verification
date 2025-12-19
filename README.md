@@ -152,5 +152,6 @@ Ensures **repeatability** and **consistency**.
 ## 🏁 Conclusion
 This project demonstrates **end-to-end verification** of an SPI memory design written in **Verilog**, using a **SystemVerilog UVM-based environment**.  
 The use of **assertions, functional coverage, code coverage**, and **TCL automation** reflects an **industry-aligned verification methodology**
+
 ---
 
