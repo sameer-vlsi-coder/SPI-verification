@@ -1,7 +1,7 @@
-# 🚀 SPI Memory Verification using Verilog, SystemVerilog, and UVM
+# 🚀 UVM-Based Verification of Memory Interface with Error Injection
 
 ## 📌 Project Overview
-This project verifies an **SPI-based memory module** using **Verilog** for RTL and a **SystemVerilog UVM-based verification environment**.  
+This project verifies an **Verification of Memory Interface with Error Injection** using **Verilog** for RTL and a **SystemVerilog UVM-based verification environment**.  
 The verification covers **SPI read/write operations**, **reset behavior**, **address validation**, and **protocol correctness**.
 
 Verification completeness is ensured using:
